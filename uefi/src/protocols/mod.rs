@@ -1,0 +1,15 @@
+pub mod acpi_protocols;
+pub mod compression_algorithm_specification;
+pub mod console_support;
+pub mod debugger_support;
+pub mod device_path_protocols;
+pub mod ebc_interpreter_protocol;
+pub mod firmware_management_protocol;
+pub mod iscsi_boot;
+pub mod loaded_image;
+pub mod media_access;
+pub mod pci_bus_support;
+pub mod scsi_driver_model_and_bus_support;
+pub mod string_services;
+pub mod uefi_driver_model;
+pub mod usb_support;

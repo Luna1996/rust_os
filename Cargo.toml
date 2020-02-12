@@ -4,6 +4,10 @@ version = "0.1.0"
 authors = ["l+l l +K <2320909844@qq.com>"]
 edition = "2018"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
+uefi = {path="./uefi"}
+
+[workspace]
+members = [
+  "uefi",
+]

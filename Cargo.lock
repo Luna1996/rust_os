@@ -3,3 +3,11 @@
 [[package]]
 name = "rust_os"
 version = "0.1.0"
+dependencies = [
+ "uefi 0.1.0",
+]
+
+[[package]]
+name = "uefi"
+version = "0.1.0"
+
