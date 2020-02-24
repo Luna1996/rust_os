@@ -1,0 +1,5 @@
+[package]
+name = "elf"
+version = "0.1.0"
+authors = ["Luna1996 <wyf19960926@gmail.com>"]
+edition = "2018"
