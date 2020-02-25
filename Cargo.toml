@@ -4,6 +4,14 @@ version = "0.1.0"
 authors = ["Luna1996 <wyf19960926@gmail.com>"]
 edition = "2018"
 
+[[bin]]
+name = "kernel"
+path = "src/main.rs"
+
+[[test]]
+name = "kernel-test"
+path = "tests/elf.rs"
+
 [workspace]
 members = ["uefi","elf"]
 

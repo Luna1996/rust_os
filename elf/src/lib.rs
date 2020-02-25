@@ -2,22 +2,28 @@
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 
+use core::fmt::Debug;
+use core::mem::transmute;
+
 /// doc: https://en.wikipedia.org/wiki/Executable_and_Linkable_Format
 
-pub const MAGIC: &str = "0x7FELF";
+pub const MAGIC: &[u8] = "\x7fELF".as_bytes();
 
+#[derive(Debug)]
 #[repr(u8)]
 pub enum MODE {
   BIT32 = 1,
   BIT64 = 2,
 }
 
+#[derive(Debug)]
 #[repr(u8)]
 pub enum ENDI {
   LITTLE = 1,
   BIG = 2,
 }
 
+#[derive(Debug)]
 #[repr(u8)]
 pub enum ABI {
   System_V = 0x00,
@@ -39,6 +45,7 @@ pub enum ABI {
   CloudABI = 0x11,
 }
 
+#[derive(Debug)]
 #[repr(packed(1))]
 pub struct E_IDENT {
   pub EI_MAG: [u8; 4],
@@ -50,6 +57,7 @@ pub struct E_IDENT {
   _EI_PAD: [u8; 7],
 }
 
+#[derive(Debug)]
 #[repr(u16)]
 pub enum FTYPE {
   ET_NONE = 0x0000,
@@ -63,6 +71,7 @@ pub enum FTYPE {
   ET_HIPROC = 0xffff,
 }
 
+#[derive(Debug)]
 #[repr(u16)]
 pub enum MACHINE {
   UNKNOWN = 0x00,
@@ -79,15 +88,16 @@ pub enum MACHINE {
   RISC_V = 0xF3,
 }
 
+#[derive(Debug)]
 #[repr(packed(2))]
-pub struct FileHeader<T> {
+pub struct FileHeader {
   pub e_ident: E_IDENT,
   pub e_type: FTYPE,
   pub e_machine: MACHINE,
   pub e_version: u32,
-  pub e_entry: T,
-  pub e_phoff: T,
-  pub e_shoff: T,
+  pub e_entry: usize,
+  pub e_phoff: usize,
+  pub e_shoff: usize,
   pub e_flags: u32,
   pub e_ehsize: u16,
   pub e_phentsize: u16,
@@ -97,6 +107,7 @@ pub struct FileHeader<T> {
   pub e_shstrndx: u16,
 }
 
+#[derive(Debug)]
 #[repr(u32)]
 pub enum PTYPE {
   PT_NULL = 0x00000000,
@@ -113,28 +124,64 @@ pub enum PTYPE {
   PT_HIPRO = 0x7FFFFFFF,
 }
 
+#[derive(Debug)]
 #[repr(C)]
-pub struct ProgramHeader<T> {
-  pub p_type: T,
-  pub p_offset: T,
-  pub p_vaddr: T,
-  pub p_paddr: T,
-  pub p_filesz: T,
-  pub p_memsz: T,
+pub struct ProgramHeader {
+  pub p_type: usize,
+  pub p_offset: usize,
+  pub p_vaddr: usize,
+  pub p_paddr: usize,
+  pub p_filesz: usize,
+  pub p_memsz: usize,
   _pad: u32,
   pub p_align: u32,
 }
 
+#[derive(Debug)]
 #[repr(packed(4))]
-pub struct SectionHeader<T> {
+pub struct SectionHeader {
   pub sh_name: u32,
   pub sh_type: u32,
-  pub sh_flags: T,
-  pub sh_addr: T,
-  pub sh_offset: T,
-  pub sh_size: T,
+  pub sh_flags: usize,
+  pub sh_addr: usize,
+  pub sh_offset: usize,
+  pub sh_size: usize,
   pub sh_link: u32,
   pub sh_info: u32,
-  pub sh_addralign: T,
-  pub sh_entsize: T,
+  pub sh_addralign: usize,
+  pub sh_entsize: usize,
+}
+
+#[derive(Debug)]
+pub struct ELFFile<'a> {
+  pub raw: *const u8,
+  pub fh: &'a FileHeader,
+  // phs: *const ProgramHeader<T>,
+  // shs: *const SectionHeader<T>,
+}
+
+pub fn check(raw: &[u8]) -> Result<MODE, &str> {
+  if raw[0] != MAGIC[0] || raw[1] != MAGIC[1] || raw[2] != MAGIC[2] || raw[3] != MAGIC[3] {
+    Ok(unsafe { transmute(raw[5]) })
+  } else {
+    Err("ELF magic number check fail!")
+  }
+}
+
+impl<'a> ELFFile<'a> {
+  pub fn new(raw: *const u8) -> ELFFile<'a> {
+    ELFFile::<'a> {
+      raw,
+      fh: unsafe { &*(raw as *const FileHeader) },
+    }
+  }
+
+  pub fn load(&mut self, addr: *mut u8, size: usize) {
+    unsafe { addr.copy_from(self.raw, size) };
+    self.raw = addr as *const u8;
+  }
+
+  pub fn getEntry(&self) -> Result<*const u8, &str> {
+    Ok(unsafe { self.raw.offset(self.fh.e_entry as isize) })
+  }
 }

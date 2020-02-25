@@ -1,7 +1,6 @@
 #![allow(safe_packed_borrows)]
 
 use elf::*;
-use std::mem::size_of;
 
 #[test]
 fn raw_to_struct() {
@@ -19,10 +18,20 @@ fn raw_to_struct() {
 
 #[test]
 fn header_size() {
-  assert_eq!(size_of::<FileHeader::<u32>>(), 52);
-  assert_eq!(size_of::<FileHeader::<u64>>(), 64);
-  assert_eq!(size_of::<ProgramHeader::<u32>>(),32);
-  assert_eq!(size_of::<ProgramHeader::<u64>>(),56);
-  assert_eq!(size_of::<SectionHeader::<u32>>(),40);
-  assert_eq!(size_of::<SectionHeader::<u64>>(),64);
+  use std::mem::size_of;
+  assert_eq!(size_of::<FileHeader>(), 64);
+  assert_eq!(size_of::<ProgramHeader>(), 56);
+  assert_eq!(size_of::<SectionHeader>(), 64);
+}
+
+#[test]
+fn elf_file_test() {
+  use core::mem::transmute;
+  use std::fs;
+  let buf = fs::read("./build/kernel").unwrap();
+  let bytes = buf.as_slice();
+  println!("{}", bytes);
+  check(bytes).unwrap();
+  let elf_file = ELFFile::new(unsafe { transmute(&bytes[0]) });
+  println!("{:#?}", elf_file.fh);
 }
