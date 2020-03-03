@@ -1,4 +1,5 @@
-use crate::*;
+use crate::services::boot::EFI_MEMORY_TYPE;
+use crate::types::*;
 
 // 8.1 Runtime Services Rules and Restrictions
 pub const EFI_RT_SUPPORTED_GET_TIME: u16 = 0x0001;

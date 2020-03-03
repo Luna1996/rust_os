@@ -3,7 +3,8 @@
 
 use crate::protocols::console_support::*;
 use crate::services::boot::*;
-use crate::*;
+use crate::services::runtime::*;
+use crate::types::*;
 
 // EFI_IMAGE_ENTRY_POINT
 // (ImageHandle:EFI_HANDLE,*SystemTable:*mut EFI_SYSTEM_TABLE)->EFI_STATUS
@@ -117,7 +118,6 @@ pub struct EFI_BOOT_SERVICES {
 }
 
 // 4.5 EFI Runtime Services Table
-use services::runtime::*;
 pub const EFI_RUNTIME_SERVICES_SIGNATURE: u64 = 0x56524553544e5552;
 pub const EFI_RUNTIME_SERVICES_REVISION: u32 = EFI_SPECIFICATION_VERSION;
 

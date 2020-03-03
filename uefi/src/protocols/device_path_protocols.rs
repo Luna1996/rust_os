@@ -1,4 +1,4 @@
-use crate::*;
+use crate::types::*;
 
 // EFI_DEVICE_PATH_PROTOCOL
 pub const EFI_DEVICE_PATH_PROTOCOL_GUID: EFI_GUID = 0x09576e916d3f11d28e3900a0c969723b;

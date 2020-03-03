@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 
-use crate::*;
+use crate::types::*;
 
 // EFI_BOOT_SERVICES.CreateEvent()
 pub type EFI_CREATE_EVENT = extern "C" fn(

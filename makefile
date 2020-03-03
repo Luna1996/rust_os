@@ -1,12 +1,22 @@
-.PHONY : all, clean
-.DEFAULT_GOAL := all
+.PHONY : kernel bootloader run
 
-target_dir = .\target
-build_dir := .\build
-efi_target := $(build_dir)\kernel_target.json
-bin_path := $(target_dir)\kernel_target\release\kernel
+kernel:
+	cargo xbuild -p kernel --target json\kernel.json --release
+	@>nul copy .\target\kernel\release\kernel .\build
+	@>nul strip build/kernel
 
-all:
-	cargo xbuild --target $(efi_target) --release
-	strip $(bin_path)
-	move /y $(bin_path) $(build_dir)\
+bootloader:
+	cargo xbuild -p bootloader --target x86_64-unknown-uefi --release
+	@>nul copy .\target\x86_64-unknown-uefi\release\bootloader.efi .\build\EFI\BootX64.efi
+	@>nul copy .\build\OVMF_VARS.backup .\build\OVMF_VARS.fd
+
+run:
+	qemu-system-x86_64 \
+	-nodefaults \
+	-vga std \
+	-machine q35,accel=kvm:tcg \
+	-m 256M \
+	-drive if=pflash,format=raw,readonly,file=build\OVMF_CODE.fd \
+	-drive if=pflash,format=raw,file=build\OVMF_VARS.fd \
+	-drive format=raw,file=fat:rw:build\EFI \
+	-monitor vc:1024x768

@@ -23,15 +23,3 @@ fn header_size() {
   assert_eq!(size_of::<ProgramHeader>(), 56);
   assert_eq!(size_of::<SectionHeader>(), 64);
 }
-
-#[test]
-fn elf_file_test() {
-  use core::mem::transmute;
-  use std::fs;
-  let buf = fs::read("./build/kernel").unwrap();
-  let bytes = buf.as_slice();
-  println!("{}", bytes);
-  check(bytes).unwrap();
-  let elf_file = ELFFile::new(unsafe { transmute(&bytes[0]) });
-  println!("{:#?}", elf_file.fh);
-}

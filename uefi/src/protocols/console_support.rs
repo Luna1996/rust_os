@@ -2,7 +2,7 @@
 #![allow(non_snake_case)]
 #![allow(non_upper_case_globals)]
 
-use crate::*;
+use crate::types::*;
 
 // EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL
 pub const EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL_GUID: EFI_GUID = 0xdd9e7534776246988c14f58517a625aa;

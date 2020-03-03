@@ -1,6 +1,6 @@
 use crate::protocols::device_path_protocols::EFI_DEVICE_PATH_PROTOCOL;
 use crate::services::runtime::EFI_TIME;
-use crate::*;
+use crate::types::*;
 
 // EFI_LOAD_FILE_PROTOCOL
 pub const EFI_LOAD_FILE_PROTOCOL_GUID: EFI_GUID = 0x56EC3091954C11d28e3f00a0c969723b;

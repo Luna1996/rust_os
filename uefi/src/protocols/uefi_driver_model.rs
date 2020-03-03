@@ -1,5 +1,5 @@
 use crate::protocols::device_path_protocols::EFI_DEVICE_PATH_PROTOCOL;
-use crate::*;
+use crate::types::*;
 
 // EFI_DRIVER_BINDING_PROTOCOL
 pub const EFI_DRIVER_BINDING_PROTOCOL_GUID: EFI_GUID = 0x18A031ABB4434D1AA5C00C09261E9F71;

@@ -1,4 +1,6 @@
-use crate::*;
+use crate::efi_system_table::EFI_SYSTEM_TABLE;
+use crate::services::boot::EFI_MEMORY_TYPE;
+use crate::types::*;
 // EFI_LOADED_IMAGE_PROTOCOL
 pub const EFI_LOADED_IMAGE_PROTOCOL_GUID: EFI_GUID = 0x5B1B31A1956211d28E3F00A0C969723B;
 pub const EFI_LOADED_IMAGE_PROTOCOL_REVISION: u16 = 0x1000;

@@ -2,7 +2,6 @@
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 
-use core::fmt::Debug;
 use core::mem::transmute;
 
 /// doc: https://en.wikipedia.org/wiki/Executable_and_Linkable_Format
@@ -88,7 +87,6 @@ pub enum MACHINE {
   RISC_V = 0xF3,
 }
 
-#[derive(Debug)]
 #[repr(packed(2))]
 pub struct FileHeader {
   pub e_ident: E_IDENT,
@@ -137,7 +135,6 @@ pub struct ProgramHeader {
   pub p_align: u32,
 }
 
-#[derive(Debug)]
 #[repr(packed(4))]
 pub struct SectionHeader {
   pub sh_name: u32,
@@ -152,7 +149,6 @@ pub struct SectionHeader {
   pub sh_entsize: usize,
 }
 
-#[derive(Debug)]
 pub struct ELFFile<'a> {
   pub raw: *const u8,
   pub fh: &'a FileHeader,
