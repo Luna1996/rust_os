@@ -1,4 +1,5 @@
 .PHONY : kernel bootloader run
+.DEFAULT_GOAL := all
 
 kernel:
 	cargo xbuild -p kernel --target json\kernel.json --release
@@ -20,3 +21,5 @@ run:
 	-drive if=pflash,format=raw,file=build\OVMF_VARS.fd \
 	-drive format=raw,file=fat:rw:build\EFI \
 	-monitor vc:1024x768
+
+all: bootloader run

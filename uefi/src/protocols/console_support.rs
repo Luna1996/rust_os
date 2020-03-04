@@ -148,7 +148,7 @@ pub type EFI_TEXT_RESET = extern "C" fn(
 // EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL.OutputString()
 pub type EFI_TEXT_STRING = extern "C" fn(
   This: &EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL, // IN
-  Str: &[u16],                            // IN
+  Str: *const u16,                        // IN
 ) -> EFI_STATUS;
 
 //*******************************************************

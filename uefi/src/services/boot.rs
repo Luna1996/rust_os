@@ -93,10 +93,10 @@ pub type EFI_RESTORE_TPL = extern "C" fn(
 
 // EFI_BOOT_SERVICES.AllocatePages()
 pub type EFI_ALLOCATE_PAGES = extern "C" fn(
-  Type: EFI_ALLOCATE_TYPE,      // IN
-  MemoryType: EFI_MEMORY_TYPE,  // IN
-  Pages: usize,                 // IN
-  Memory: EFI_PHYSICAL_ADDRESS, // IN OUT
+  Type: EFI_ALLOCATE_TYPE,           // IN
+  MemoryType: EFI_MEMORY_TYPE,       // IN
+  Pages: usize,                      // IN
+  Memory: &mut EFI_PHYSICAL_ADDRESS, // IN OUT
 ) -> EFI_STATUS;
 
 #[repr(C)]
