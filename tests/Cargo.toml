@@ -6,3 +6,4 @@ edition = "2018"
 
 [dev-dependencies]
 elf = {path = "../elf"}
+uefi = {path = "../uefi"}

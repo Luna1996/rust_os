@@ -1,7 +1,8 @@
 #![cfg(test)]
-#![allow(safe_packed_borrows)]
+#![allow(safe_packed_borrows, unused_imports)]
 #![feature(type_name_of_val)]
 mod test_elf;
+mod test_uefi;
 
 #[test]
 fn raw_to_struct() {
@@ -53,4 +54,14 @@ fn pointer_offset() {
     let c = b.offset(1);
     assert_ne!(b, c);
   }
+}
+
+#[test]
+fn tuple_test() {
+  let mut a: (i32, i32) = (0, 0);
+  fn f(n: &mut i32) {
+    *n = 1
+  };
+  f(&mut a.0);
+  println!("{}", a.0);
 }

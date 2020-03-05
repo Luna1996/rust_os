@@ -5,8 +5,6 @@
 use crate::types::*;
 
 // EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL
-pub const EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL_GUID: EFI_GUID = 0xdd9e7534776246988c14f58517a625aa;
-
 #[repr(C)]
 pub struct EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL {
   pub Reset: EFI_INPUT_RESET_EX,
@@ -84,8 +82,6 @@ pub type EFI_UNREGISTER_KEYSTROKE_NOTIFY = extern "C" fn(
 ) -> EFI_STATUS;
 
 // EFI_SIMPLE_TEXT_INPUT_PROTOCOL
-pub const EFI_SIMPLE_TEXT_INPUT_PROTOCOL_GUID: EFI_GUID = 0x387477c169c711d28e3900a0c969723b;
-
 #[repr(C)]
 pub struct EFI_SIMPLE_TEXT_INPUT_PROTOCOL {
   pub Reset: EFI_INPUT_RESET,
@@ -112,8 +108,6 @@ pub struct EFI_INPUT_KEY {
 }
 
 // EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL
-pub const EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL_GUID: EFI_GUID = 0x387477c269c711d28e3900a0c969723b;
-
 #[repr(C)]
 pub struct EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL<'a> {
   pub Reset: EFI_TEXT_RESET,
@@ -285,8 +279,6 @@ pub type EFI_TEXT_ENABLE_CURSOR = extern "C" fn(
 ) -> EFI_STATUS;
 
 // EFI_SIMPLE_POINTER_PROTOCOL
-pub const EFI_SIMPLE_POINTER_PROTOCOL_GUID: EFI_GUID = 0x31878c87b7511d59a4f0090273fc14d;
-
 #[repr(C)]
 pub struct EFI_SIMPLE_POINTER_PROTOCOL {
   pub Reset: EFI_SIMPLE_POINTER_RESET,
@@ -326,8 +318,6 @@ pub struct EFI_SIMPLE_POINTER_STATE {
 }
 
 // EFI_ABSOLUTE_POINTER_PROTOCOL
-pub const EFI_ABSOLUTE_POINTER_PROTOCOL_GUID: EFI_GUID = 0x8D59D32BC6554AE99B15F25904992A43;
-
 #[repr(C)]
 pub struct EFI_ABSOLUTE_POINTER_PROTOCOL {
   pub Reset: EFI_ABSOLUTE_POINTER_RESET,
@@ -374,8 +364,6 @@ pub const EFI_ABSP_TouchActive: u32 = 0x00000001;
 pub const EFI_ABS_AltActive: u32 = 0x00000002;
 
 // EFI_SERIAL_IO_PROTOCOL
-pub const EFI_SERIAL_IO_PROTOCOL_GUID: EFI_GUID = 0xBB25CF6FF1D411D29a0c0090273fc1fd;
-
 #[repr(C)]
 pub struct EFI_SERIAL_IO_PROTOCOL<'a> {
   pub Revision: u32,
@@ -418,8 +406,6 @@ pub enum EFI_STOP_BITS_TYPE {
   OneFiveStopBits, // 1.5 stop bits
   TwoStopBits,     // 2 stop bits
 }
-
-pub const EFI_SERIAL_TERMINAL_DEVICE_TYPE_GUID: EFI_GUID = 0x6ad9a60f58154c7c8a105053d2bf7a1b;
 
 // EFI_SERIAL_IO_PROTOCOL.Reset()
 pub type EFI_SERIAL_RESET = extern "C" fn(
@@ -476,14 +462,12 @@ pub type EFI_SERIAL_READ = extern "C" fn(
 ) -> EFI_STATUS;
 
 // EFI_GRAPHICS_OUTPUT_PROTOCOL
-pub const EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID: EFI_GUID = 0x9042a9de23dc4a3896fb7aded080516a;
-
 #[repr(C)]
 pub struct EFI_GRAPHICS_OUTPUT_PROTOCOL<'a> {
   pub QueryMode: EFI_GRAPHICS_OUTPUT_PROTOCOL_QUERY_MODE,
   pub SetMode: EFI_GRAPHICS_OUTPUT_PROTOCOL_SET_MODE,
   pub Blt: EFI_GRAPHICS_OUTPUT_PROTOCOL_BLT,
-  pub Mode: &'a mut EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE<'a>,
+  pub Mode: &'a EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE<'a>,
 }
 
 #[repr(C)]
@@ -494,7 +478,9 @@ pub struct EFI_PIXEL_BITMASK {
   pub ReservedMask: u32,
 }
 
+use core::fmt::Debug;
 #[repr(C)]
+#[derive(Debug)]
 pub enum EFI_GRAPHICS_PIXEL_FORMAT {
   PixelRedGreenBlueReserved8BitPerColor,
   PixelBlueGreenRedReserved8BitPerColor,
@@ -517,7 +503,7 @@ pub struct EFI_GRAPHICS_OUTPUT_MODE_INFORMATION {
 pub struct EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE<'a> {
   pub MaxMode: u32,
   pub Mode: u32,
-  pub Info: &'a mut EFI_GRAPHICS_OUTPUT_MODE_INFORMATION,
+  pub Info: &'a EFI_GRAPHICS_OUTPUT_MODE_INFORMATION,
   pub SizeOfInfo: usize,
   pub FrameBufferBase: EFI_PHYSICAL_ADDRESS,
   pub FrameBufferSize: usize,
@@ -525,10 +511,10 @@ pub struct EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE<'a> {
 
 // EFI_GRAPHICS_OUTPUT_PROTOCOL.QueryMode()
 pub type EFI_GRAPHICS_OUTPUT_PROTOCOL_QUERY_MODE = extern "C" fn(
-  This: &EFI_GRAPHICS_OUTPUT_PROTOCOL,                  // IN
-  ModeNumber: u32,                                      // IN
-  SizeOfInfo: &mut usize,                               // OUT
-  Info: &mut &mut EFI_GRAPHICS_OUTPUT_MODE_INFORMATION, // OUT
+  This: &EFI_GRAPHICS_OUTPUT_PROTOCOL,              // IN
+  ModeNumber: u32,                                  // IN
+  SizeOfInfo: &mut usize,                           // OUT
+  Info: &mut &EFI_GRAPHICS_OUTPUT_MODE_INFORMATION, // OUT
 ) -> EFI_STATUS;
 
 // EFI_GRAPHICS_OUTPUT_PROTOCOL.SetMode()
@@ -569,8 +555,6 @@ pub type EFI_GRAPHICS_OUTPUT_PROTOCOL_BLT = extern "C" fn(
 ) -> EFI_STATUS;
 
 // EFI_EDID_DISCOVERED_PROTOCOL
-pub const EFI_EDID_DISCOVERED_PROTOCOL_GUID: EFI_GUID = 0x1c0c34f6d38041faa0498ad06c1a66aa;
-
 #[repr(C)]
 pub struct EFI_EDID_DISCOVERED_PROTOCOL<'a> {
   pub SizeOfEdid: u32,
@@ -578,8 +562,6 @@ pub struct EFI_EDID_DISCOVERED_PROTOCOL<'a> {
 }
 
 // EFI_EDID_ACTIVE_PROTOCOL
-pub const EFI_EDID_ACTIVE_PROTOCOL_GUID: EFI_GUID = 0xbd8c10569f3644ec92a8a6337f817986;
-
 #[repr(C)]
 pub struct EFI_EDID_ACTIVE_PROTOCOL<'a> {
   pub SizeOfEdid: u32,
@@ -587,8 +569,6 @@ pub struct EFI_EDID_ACTIVE_PROTOCOL<'a> {
 }
 
 // EFI_EDID_OVERRIDE_PROTOCOL
-pub const EFI_EDID_OVERRIDE_PROTOCOL_GUID: EFI_GUID = 0x48ecb431fb7245c0a922f458fe040bd5;
-
 #[repr(C)]
 pub struct EFI_EDID_OVERRIDE_PROTOCOL {
   pub GetEdid: EFI_EDID_OVERRIDE_PROTOCOL_GET_EDID,

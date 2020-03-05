@@ -34,12 +34,6 @@ pub type EFI_CREATE_EVENT_EX = extern "C" fn(
   Event: &mut EFI_EVENT,                    // OUT
 ) -> EFI_STATUS;
 
-pub const EFI_EVENT_GROUP_EXIT_BOOT_SERVICES: EFI_GUID = 0x27abf055b1b84c268048748f37baa2df;
-pub const EFI_EVENT_GROUP_VIRTUAL_ADDRESS_CHANGE: EFI_GUID = 0x13fa7698c83149c787ea8f43fcc25196;
-pub const EFI_EVENT_GROUP_MEMORY_MAP_CHANGE: EFI_GUID = 0x78bee926692f48fd9edb01422ef0d7ab;
-pub const EFI_EVENT_GROUP_READY_TO_BOOT: EFI_GUID = 0x7ce88fb34bd7467987a8a8d8dee50d2b;
-pub const EFI_EVENT_GROUP_RESET_SYSTEM: EFI_GUID = 0x62da6a5613fb485aa8daa3dd7912cb6b;
-
 // EFI_BOOT_SERVICES.CloseEvent()
 pub type EFI_CLOSE_EVENT = extern "C" fn(
   Event: EFI_EVENT, // IN
@@ -135,20 +129,20 @@ pub type EFI_FREE_PAGES = extern "C" fn(
 
 // EFI_BOOT_SERVICES.GetMemoryMap()
 pub type EFI_GET_MEMORY_MAP = extern "C" fn(
-  MemoryMapSize: &mut usize,             // IN OUT
-  MemoryMap: &mut EFI_MEMORY_DESCRIPTOR, // IN OUT
-  MapKey: &mut usize,                    // OUT
-  DescriptorSize: &mut usize,            // OUT
-  DescriptorVersion: &mut u32,           // OUT
+  MemoryMapSize: &mut usize,               // IN OUT
+  MemoryMap: *const EFI_MEMORY_DESCRIPTOR, // IN OUT
+  MapKey: &mut usize,                      // OUT
+  DescriptorSize: &mut usize,              // OUT
+  DescriptorVersion: &mut u32,             // OUT
 ) -> EFI_STATUS;
 
 #[repr(C)]
 pub struct EFI_MEMORY_DESCRIPTOR {
-  Type: u32,
-  PhysicalStart: EFI_PHYSICAL_ADDRESS,
-  VirtualStart: EFI_VIRTUAL_ADDRESS,
-  NumberOfPages: u64,
-  Attribute: u64,
+  pub Type: u32,
+  pub PhysicalStart: EFI_PHYSICAL_ADDRESS,
+  pub VirtualStart: EFI_VIRTUAL_ADDRESS,
+  pub NumberOfPages: u64,
+  pub Attribute: u64,
 }
 
 pub const EFI_MEMORY_UC: u64 = 0x0000000000000001;
@@ -218,10 +212,10 @@ pub type EFI_REGISTER_PROTOCOL_NOTIFY = extern "C" fn(
 // EFI_BOOT_SERVICES.LocateHandle()
 pub type EFI_LOCATE_HANDLE = extern "C" fn(
   SearchType: EFI_LOCATE_SEARCH_TYPE, // IN
-  Protocol: Option<&EFI_GUID>,        // IN
-  SearchKey: Option<VOID_PTR>,        // IN
+  Protocol: &EFI_GUID,                // IN
+  SearchKey: VOID_PTR,                // IN
   BufferSize: &mut usize,             // IN OUT
-  Buffer: EFI_HANDLE,                 // OUT
+  Buffer: &mut EFI_HANDLE,            // OUT
 ) -> EFI_STATUS;
 
 #[repr(C)]
@@ -254,12 +248,12 @@ pub struct EFI_DEVICE_PATH_PROTOCOL {
 
 // EFI_BOOT_SERVICES.OpenProtocol()
 pub type EFI_OPEN_PROTOCOL = extern "C" fn(
-  Handle: EFI_HANDLE,               // IN
-  Protocol: &EFI_GUID,              // IN
-  Interface: Option<&mut VOID_PTR>, // OUT
-  AgentHandle: EFI_HANDLE,          // IN
-  ControllerHandle: EFI_HANDLE,     // IN
-  Attributes: u32,                  // IN
+  Handle: EFI_HANDLE,           // IN
+  Protocol: &EFI_GUID,          // IN
+  Interface: &mut VOID_PTR,     // OUT
+  AgentHandle: EFI_HANDLE,      // IN
+  ControllerHandle: EFI_HANDLE, // IN
+  Attributes: u32,              // IN
 ) -> EFI_STATUS;
 
 pub const EFI_OPEN_PROTOCOL_BY_HANDLE_PROTOCOL: u32 = 0x00000001;
@@ -346,8 +340,6 @@ pub type EFI_IMAGE_LOAD = extern "C" fn(
   SourceSize: usize,                     // IN
   ImageHandle: &mut EFI_HANDLE,          // OUT
 ) -> EFI_STATUS;
-
-pub const EFI_HII_PACKAGE_LIST_PROTOCOL_GUID: EFI_GUID = 0x6a1ee763d47a43b4aabeef1de2ab56fc;
 
 // EFI_BOOT_SERVICES.StartImage()
 pub type EFI_IMAGE_START = extern "C" fn(

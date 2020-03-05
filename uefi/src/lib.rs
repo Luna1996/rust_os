@@ -1,10 +1,12 @@
 #![no_std]
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
+#![feature(const_transmute)]
 
 pub mod types {
+  #[repr(C)]
+  pub struct EFI_GUID(pub u32, pub u16, pub u16, pub [u8; 8]);
   pub type VOID_PTR = *mut u8;
-  pub type EFI_GUID = u128;
   pub type EFI_STATUS = usize;
   pub type EFI_HANDLE = VOID_PTR;
   pub type EFI_EVENT = VOID_PTR;
@@ -19,6 +21,7 @@ pub mod types {
 }
 
 pub mod efi_system_table;
+pub mod guid;
 pub mod hii_configuration_processing_and_browser_protocol;
 pub mod hii_protocols;
 pub mod miscellaneous_protocols;
@@ -29,4 +32,5 @@ pub mod search_technologies;
 pub mod secure_boot_and_driver_signing;
 pub mod secure_technologies;
 pub mod services;
+pub mod status;
 pub mod user_identification;

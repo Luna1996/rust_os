@@ -20,6 +20,7 @@ name = "tests"
 version = "0.1.0"
 dependencies = [
  "elf 0.1.0",
+ "uefi 0.1.0",
 ]
 
 [[package]]
