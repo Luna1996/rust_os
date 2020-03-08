@@ -5,7 +5,7 @@
 
 pub mod types {
   #[repr(C)]
-  pub struct EFI_GUID(pub u32, pub u16, pub u16, pub [u8; 8]);
+  pub struct EFI_GUID(pub u32, pub [u16; 2], pub [u8; 8]);
   pub type VOID_PTR = *mut u8;
   pub type EFI_STATUS = usize;
   pub type EFI_HANDLE = VOID_PTR;

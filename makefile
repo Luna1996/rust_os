@@ -3,7 +3,7 @@
 
 kernel:
 	cargo xbuild -p kernel --target json\kernel.json --release
-	@>nul copy .\target\kernel\release\kernel .\build
+	@>nul copy .\target\kernel\release\kernel .\build\EFI
 	@>nul strip build/kernel
 
 bootloader:
@@ -16,7 +16,7 @@ run:
 	-nodefaults \
 	-vga std \
 	-machine q35,accel=kvm:tcg \
-	-m 256M \
+	-m 64M \
 	-drive if=pflash,format=raw,readonly,file=build\OVMF_CODE.fd \
 	-drive if=pflash,format=raw,file=build\OVMF_VARS.fd \
 	-drive format=raw,file=fat:rw:build\EFI \

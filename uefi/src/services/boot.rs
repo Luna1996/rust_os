@@ -101,7 +101,8 @@ pub enum EFI_ALLOCATE_TYPE {
   MaxAllocateType,
 }
 
-#[repr(C)]
+#[derive(Debug)]
+#[repr(u32)]
 pub enum EFI_MEMORY_TYPE {
   EfiReservedMemoryType,
   EfiLoaderCode,
@@ -129,20 +130,21 @@ pub type EFI_FREE_PAGES = extern "C" fn(
 
 // EFI_BOOT_SERVICES.GetMemoryMap()
 pub type EFI_GET_MEMORY_MAP = extern "C" fn(
-  MemoryMapSize: &mut usize,               // IN OUT
-  MemoryMap: *const EFI_MEMORY_DESCRIPTOR, // IN OUT
-  MapKey: &mut usize,                      // OUT
-  DescriptorSize: &mut usize,              // OUT
-  DescriptorVersion: &mut u32,             // OUT
+  MemoryMapSize: &mut usize,             // IN OUT
+  MemoryMap: *mut EFI_MEMORY_DESCRIPTOR, // IN OUT
+  MapKey: &mut usize,                    // OUT
+  DescriptorSize: &mut usize,            // OUT
+  DescriptorVersion: &mut u32,           // OUT
 ) -> EFI_STATUS;
 
 #[repr(C)]
 pub struct EFI_MEMORY_DESCRIPTOR {
-  pub Type: u32,
+  pub Type: EFI_MEMORY_TYPE,
   pub PhysicalStart: EFI_PHYSICAL_ADDRESS,
   pub VirtualStart: EFI_VIRTUAL_ADDRESS,
   pub NumberOfPages: u64,
   pub Attribute: u64,
+  _padding: u64,
 }
 
 pub const EFI_MEMORY_UC: u64 = 0x0000000000000001;

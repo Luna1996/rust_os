@@ -65,3 +65,30 @@ fn tuple_test() {
   f(&mut a.0);
   println!("{}", a.0);
 }
+
+#[test]
+fn str_test() {
+  let s = &"hello"[0..3];
+  assert_eq!(s, "hel");
+  let a: [u8; 4] = [46, 46, 46, 46];
+  use std::str::from_utf8_unchecked;
+  let b = unsafe { from_utf8_unchecked(&a) };
+  assert_eq!(&a as *const u8, (b as *const str) as *const u8);
+  assert_eq!(&a[..], b.as_bytes());
+}
+
+#[test]
+fn vec_test() {
+  let v = vec![0; 10];
+  assert_eq!(v.len(), v.capacity());
+}
+
+#[test]
+fn turple_test() {
+  use std::mem::size_of;
+  assert_eq!(size_of::<u32>() + size_of::<u32>(), size_of::<(u32, u32)>());
+  assert_ne!(
+    size_of::<u32>() + size_of::<usize>(),
+    size_of::<(u32, usize)>()
+  );
+}

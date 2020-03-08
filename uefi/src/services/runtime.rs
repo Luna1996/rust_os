@@ -116,10 +116,10 @@ pub type EFI_SET_WAKEUP_TIME = extern "C" fn(
 use crate::services::boot::EFI_MEMORY_DESCRIPTOR;
 // EFI_SET_VIRTUAL_ADDRESS_MAP()
 pub type EFI_SET_VIRTUAL_ADDRESS_MAP = extern "C" fn(
-  MemoryMapSize: usize,               // IN
-  DescriptorSize: usize,              // IN
-  DescriptorVersion: u32,             // IN
-  VirtualMap: &EFI_MEMORY_DESCRIPTOR, // IN
+  MemoryMapSize: usize,                     // IN
+  DescriptorSize: usize,                    // IN
+  DescriptorVersion: u32,                   // IN
+  VirtualMap: *const EFI_MEMORY_DESCRIPTOR, // IN
 ) -> EFI_STATUS;
 
 // EFI_CONVERT_POINTER()
@@ -131,10 +131,10 @@ pub type EFI_CONVERT_POINTER = extern "C" fn(
 // 8.5 Miscellaneous Runtime Services
 // EFI_RESET_SYSTEM()
 pub type EFI_RESET_SYSTEM = extern "C" fn(
-  ResetType: EFI_RESET_TYPE,    // IN
-  ResetStatus: EFI_STATUS,      // IN
-  DataSize: usize,              // IN
-  ResetData: Option<*const u8>, // IN
+  ResetType: EFI_RESET_TYPE, // IN
+  ResetStatus: EFI_STATUS,   // IN
+  DataSize: usize,           // IN
+  ResetData: *const u8,        // IN
 );
 // EFI_RESET_TYPE
 #[repr(C)]

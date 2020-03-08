@@ -1,43 +1,45 @@
-//╔═══════════╗
-//║ 	Init  	║
-//╚═══════════╝
-use core::{mem::transmute, slice::from_raw_parts_mut};
+use alloc::vec::Vec;
+use core::mem::transmute;
 use uefi::{
-  efi_system_table::EFI_SYSTEM_TABLE, protocols::console_support::EFI_GRAPHICS_OUTPUT_PROTOCOL,
+  guid::EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID,
+  protocols::console_support::EFI_GRAPHICS_OUTPUT_PROTOCOL,
   services::boot::EFI_LOCATE_SEARCH_TYPE::ByProtocol, types::EFI_HANDLE,
 };
 
-pub unsafe fn init(st: &EFI_SYSTEM_TABLE) {
-  let video_protocol = {
-    let guid = uefi::guid::EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
-    let mut buf_size: usize = 0;
+//╔═══════════╗
+//║ 	Init  	║
+//╚═══════════╝
+pub unsafe fn init() {
+  let st = &*crate::ST;
+  let protocols = {
+    let mut handels_buf_size: usize = 0;
     (st.BootServices.LocateHandle)(
       ByProtocol,
-      &guid,
+      &EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID,
       0 as *mut u8,
-      &mut buf_size,
+      &mut handels_buf_size,
       &mut (0 as *mut u8),
     );
-    let buf = efi_alloc!(EFI_HANDLE, buf_size / 8);
-    (st.BootServices.LocateHandle)(ByProtocol, &guid, 0 as *mut u8, &mut buf_size, &mut buf[0]);
-    let mut g = efi_alloc!(EFI_GRAPHICS_OUTPUT_PROTOCOL);
-    (st.BootServices.HandleProtocol)(buf[0], &guid, transmute(&mut g));
-    g
+    let num_of_handels = handels_buf_size / 8;
+    let mut handles: Vec<EFI_HANDLE> = Vec::with_capacity(num_of_handels);
+    let mut protocols: Vec<&EFI_GRAPHICS_OUTPUT_PROTOCOL> = Vec::with_capacity(num_of_handels);
+    handles.set_len(num_of_handels);
+    (st.BootServices.LocateHandle)(
+      ByProtocol,
+      &EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID,
+      0 as *mut u8,
+      &mut handels_buf_size,
+      &mut handles[0],
+    );
+    protocols.set_len(num_of_handels);
+    for i in 0..num_of_handels {
+      (st.BootServices.HandleProtocol)(
+        handles[i],
+        &EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID,
+        transmute(&mut protocols[i]),
+      );
+    }
+    protocols
   };
-  let video_buffer = from_raw_parts_mut(
-    video_protocol.Mode.FrameBufferBase as *mut u32,
-    video_protocol.Mode.FrameBufferSize / 4,
-  );
-  let w = video_protocol.Mode.Info.HorizontalResolution as usize;
-  let h = video_protocol.Mode.Info.VerticalResolution as usize;
-  for i in 0..100 {
-    video_buffer[i + i * w] = 0xFF0000;
-  }
-  efi_print!(
-    "({}x{})({})(0x{:0>16X})\r\n",
-    video_protocol.Mode.Info.HorizontalResolution,
-    video_protocol.Mode.Info.VerticalResolution,
-    video_protocol.Mode.FrameBufferSize,
-    video_protocol.Mode.FrameBufferBase
-  );
+  crate::VP = protocols[0];
 }

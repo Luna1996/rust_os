@@ -63,7 +63,7 @@ pub struct EFI_FILE_PROTOCOL {
 pub type EFI_FILE_OPEN = extern "C" fn(
   This: &EFI_FILE_PROTOCOL,           // IN
   NewHandle: &mut &EFI_FILE_PROTOCOL, // OUT
-  FileName: &[u16],                   // IN
+  FileName: *const u16,               // IN
   OpenMode: u64,                      // IN
   Attributes: u64,                    // IN
 ) -> EFI_STATUS;
@@ -158,7 +158,7 @@ pub type EFI_FILE_GET_INFO = extern "C" fn(
   This: &EFI_FILE_PROTOCOL,   // IN
   InformationType: &EFI_GUID, // IN
   BufferSize: &mut usize,     // IN OUT
-  Buffer: *const u8,          // OUT
+  Buffer: VOID_PTR,           // OUT
 ) -> EFI_STATUS;
 
 // EFI_FILE_PROTOCOL.SetInfo()
@@ -176,7 +176,7 @@ pub type EFI_FILE_FLUSH = extern "C" fn(
 
 // EFI_FILE_INFO
 #[repr(C)]
-pub struct EFI_FILE_INFO<'a> {
+pub struct EFI_FILE_INFO {
   pub Size: u64,
   pub FileSize: u64,
   pub PhysicalSize: u64,
@@ -184,18 +184,18 @@ pub struct EFI_FILE_INFO<'a> {
   pub LastAccessTime: EFI_TIME,
   pub ModificationTime: EFI_TIME,
   pub Attribute: u64,
-  pub FileName: &'a [u16],
+  pub FileName: u16,
 }
 
 // EFI_FILE_SYSTEM_INFO
 #[repr(C)]
-pub struct EFI_FILE_SYSTEM_INFO<'a> {
+pub struct EFI_FILE_SYSTEM_INFO {
   pub Size: u64,
   pub ReadOnly: bool,
   pub VolumeSize: u64,
   pub FreeSpace: u64,
   pub BlockSize: u32,
-  pub VolumeLabel: &'a [u16],
+  pub VolumeLabel: u16,
 }
 
 // EFI_FILE_SYSTEM_VOLUME_LABEL
